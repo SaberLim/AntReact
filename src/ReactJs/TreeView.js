@@ -10,7 +10,7 @@ var TreeView = React.createClass(
                     if(item.children){
                      return( <TreeNode> {loop(item.children)} </TreeNode>)
                     }    
-                    return <TreeNode key={item.key} title={item.key} >哈哈哈2</TreeNode>
+                    return <TreeNode key={item.key} title={item.key} >哈哈2</TreeNode>
                 }
             return(
                 <div>
