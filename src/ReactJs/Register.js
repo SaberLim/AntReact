@@ -31,10 +31,36 @@ const residences = [{
 }];
 
 class RegisterForm extends Component{
+   constructor(props)
+   {
+     super(props);
+     this.checkPassword=this.checkPassword.bind(this);
+   }
      state = {
     confirmDirty: false,
     autoCompleteResult: [],
   };
+  checkPassword (rule, value, callback) {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('两次密码不同');
+    } else {
+      callback();
+    }
+  }
+  checkConfirm = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && this.state.confirmDirty) {
+      form.validateFields(['confirm'], { force: true });
+    }
+    callback();
+  }
+  checkNickName=(rule,value,callback)=>{
+    callback();
+  }
+  GetCaptcha=()=>{
+    var nickName =this.props.form.getFieldValue('email');
+  }
     render()
     {
     const { getFieldDecorator } = this.props.form;
@@ -84,9 +110,9 @@ class RegisterForm extends Component{
         >
           {getFieldDecorator('email', {
             rules: [{
-              type: 'email', message: 'The input is not valid E-mail!',
+              type: 'email', message: '输入无效的电子邮件！',
             }, {
-              required: true, message: 'Please input your E-mail!',
+              required: true, message: '请输入您的电子邮件!',
             }],
           })(
             <Input />
@@ -135,7 +161,10 @@ class RegisterForm extends Component{
           hasFeedback
         >
           {getFieldDecorator('nickname', {
-            rules: [{ required: true, message: '请输入您的昵称!', whitespace: true }],
+            rules: [{ 
+              required: true, message: '请输入您的昵称!', whitespace: true },
+              {validator:this.checkNickName}
+              ],
           })(
             <Input />
           )}
@@ -163,22 +192,6 @@ class RegisterForm extends Component{
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="Website"
-        >
-          {getFieldDecorator('website', {
-            rules: [{ required: true, message: 'Please input website!' }],
-          })(
-            <AutoComplete
-              dataSource={websiteOptions}
-              onChange={this.handleWebsiteChange}
-              placeholder="website"
-            >
-              <Input />
-            </AutoComplete>
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
           label="验证码"
           extra="我们必须确认您是人。"
         >
@@ -191,7 +204,7 @@ class RegisterForm extends Component{
               )}
             </Col>
             <Col span={12}>
-              <Button size="large">发送验证码</Button>
+              <Button onClick={this.GetCaptcha} size="large">发送验证码</Button>
             </Col>
           </Row>
         </FormItem>
