@@ -9,9 +9,15 @@ class LoginForm extends Component{
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err) {
+      if (!err) {       
         console.log('Received values of form: ', values);
-      }
+        var formData = new FormData();
+        formData=values;
+        var xhr  = new XMLHttpRequest();
+        xhr.open("",formData);
+        xhr.send(formData);
+        xhr.onreadystatechange = function (){} 
+      }  
     });
   }
   render(){
@@ -21,7 +27,9 @@ class LoginForm extends Component{
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
           {getFieldDecorator('userName', {
-            rules: [{ required: true, message: '请输入您的账号!' }],
+            rules: [{ required: true, message: '请输入您的账号!' },
+            {pattern:new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"),message:'邮箱格式不正确'}
+            ],
           })(
              <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
           )}
@@ -41,7 +49,7 @@ class LoginForm extends Component{
             <Checkbox>Remember me</Checkbox>
           )}
                <a className="login-form-forgot" href="">Forgot password</a>
-              <Button  style={{width:240}} type="primary" htmlType="submit" >
+              <Button  style={{width:240}} type="primary" htmlType="button" onClick={this.handleSubmit} >
                 Log in
               </Button>
               Or <a href="">register now!</a>
