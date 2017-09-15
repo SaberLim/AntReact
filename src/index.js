@@ -20,5 +20,4 @@ ReactDOM.render(
     <Login/>,
   </div>,
     document.getElementById('root')
-  
 );
